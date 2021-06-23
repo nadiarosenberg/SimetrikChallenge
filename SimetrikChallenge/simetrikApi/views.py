@@ -18,13 +18,19 @@ def convertToJson(res):
 
 @api_view(["GET"])
 def get_tables(request):
-  rs = engine.execute('SHOW tables')
-  jsonResponse = convertToJson(rs)
-  return JsonResponse(jsonResponse,  safe=False, status=status.HTTP_200_OK)
+  try:
+    rs = engine.execute('SHOW tables')
+    jsonResponse = convertToJson(rs)
+    return JsonResponse(jsonResponse,  safe=False, status=status.HTTP_200_OK)
+  except:
+    return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["GET"])
 def get_table(request, name):
-  q = "Select * FROM {}".format(name)
-  rs = engine.connect().execute(q)
-  jsonResponse = convertToJson(rs)
-  return JsonResponse(jsonResponse,  safe=False, status=status.HTTP_200_OK)
+  try:
+    q = "Select * FROM {}".format(name)
+    rs = engine.connect().execute(q)
+    jsonResponse = convertToJson(rs)
+    return JsonResponse(rs, safe=False, status=status.HTTP_200_OK)
+  except:
+    return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
