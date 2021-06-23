@@ -14,9 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from rest_framework.routers import DefaultRouter
+from django.urls import include, path
+from simetrikApi import views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('tables/', views.get_tables),
+    path('tables/<str:name>', views.get_table),
 ]
