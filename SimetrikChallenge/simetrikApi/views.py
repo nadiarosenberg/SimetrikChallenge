@@ -30,7 +30,7 @@ def get_table(request, name):
   offset = pagination.getOffSet(page, limit)
   paginationParams = {'page': page, 'limit': limit, 'offset': offset}
   query = models.TablesManager.getOneTable(name, prop, where, equals, paginationParams)
-  count = models.TablesManager.getCount(name)
+  count = models.TablesManager.getCount(name, where, equals)
   paginationResult = pagination.getPaginationResult(page, limit, name, count)
   if query == 'error':
     return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

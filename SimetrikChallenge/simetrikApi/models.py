@@ -2,6 +2,24 @@ from django.db import models
 import pandas
 import sqlalchemy
 import pymysql
+
+def sqlSentence(name, where, equals, prop, limit, offset):
+  q=''
+  if (where == None):
+    q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, prop, limit, offset)
+    return q
+  else:
+    q = 'SELECT * FROM {} WHERE {} = "{}" ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, where, equals, prop, limit, offset)
+    return q
+
+def sqlCountSentence(name, where, equals):
+  qCount =''
+  if (where == None):
+    qCount = 'SELECT COUNT(*) FROM {}'.format(name)
+    return qCount
+  else:
+    qCount = 'SELECT COUNT(*) FROM {} WHERE {} = "{}"'.format(name, where, equals)
+    return qCount
 class TablesManager:
   def createTable(data):
     try:
@@ -33,26 +51,26 @@ class TablesManager:
       return 'error'
   
   def getOneTable(name, prop, where, equals, paginationParams):
-    try:
+    #try:
       limit = paginationParams.get('limit')
       offset = paginationParams.get('offset')
+      q = sqlSentence(name, where, equals, prop, limit, offset)
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
-      q = 'SELECT * FROM {} WHERE {} = "{}" ORDER BY {} DESC LIMIT {} OFFSET {} '.format(name, where, equals, prop, limit, offset)
       cursor.execute(q)
       result = cursor.fetchall()
       engine.dispose()
       return result
-    except:
-      return 'error'
+    #except:
+      #return 'error'
 
-  def getCount(name):
+  def getCount(name, where, equals):
     try:
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
-      qCount = 'SELECT COUNT(*) FROM {}'.format(name)
+      qCount = sqlCountSentence(name, where, equals)
       cursor.execute(qCount)
       result = cursor.fetchall()
       engine.dispose()
