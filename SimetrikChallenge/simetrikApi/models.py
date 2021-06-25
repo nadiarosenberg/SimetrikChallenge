@@ -46,12 +46,11 @@ class TablesManager:
     except:
       return 'error'
   
-  def getOneTable():
+  def getOneTable(name):
     try:
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
       prop = 'Day'
       limit = 2
-      name = 'fig4'
       q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {}'.format(name, prop, limit)
       rs = engine.connect().execute(q)
       engine.dispose()

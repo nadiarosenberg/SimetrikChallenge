@@ -18,6 +18,6 @@ from simetrikApi import views
 
 urlpatterns = [
     path('tables/', views.get_tables),
-    path('tables/table', views.get_table),
+    path('tables/<str:name>', views.get_table),
     path('tables/create', views.create_table),
 ]

@@ -12,11 +12,11 @@ def get_tables(request):
     return JsonResponse(query, safe=False, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
-def get_table(request):
+def get_table(request, name):
   #prop = request.GET('prop')
   #limit = request.GET('limit')
   #print(prop, limit)
-  query = models.TablesManager.getOneTable()
+  query = models.TablesManager.getOneTable(name)
   if query == 'error':
     return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
   else:
