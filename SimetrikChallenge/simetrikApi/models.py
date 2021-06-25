@@ -3,6 +3,7 @@ import pandas
 import sqlalchemy
 import pymysql
 import json
+import io
 
 '''def dictfetchall(engine):
   desc = engine.description
@@ -19,15 +20,19 @@ def convertToJson(res):
   return jsonResponse
 
 class TablesManager:
-  '''def createTable():
+  def createTable(url):
     try:
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
-      data = pandas.read_csv('../../fig4.csv')
-      database = data.to_sql('fig4',engine)
-      engine.dispose()
-      return 'Table created'
+      data = pandas.read_csv(url)
+      try:
+        database = data.to_sql('fig4',engine, if_exists='fail')
+        engine.dispose()
+        return 'Table created'
+      except:
+        engine.dispose()
+        return 'Table already exist'
     except:
-      return 'error''''
+      return 'Error creating table'
       
   def getTables():
     try:
