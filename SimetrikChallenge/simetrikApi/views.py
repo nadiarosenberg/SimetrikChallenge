@@ -24,11 +24,8 @@ def get_table(request):
 
 @api_view(["POST"])
 def create_table(request):
-  url = request.data
-  pairs = url.items()
-  for key, value in pairs:
-    url = value
-  query = models.TablesManager.createTable(url)
+  data = request.data
+  query = models.TablesManager.createTable(data)
   if query == 'Error creating table':
     return JsonResponse(query, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
   elif query == 'Table already exist':
