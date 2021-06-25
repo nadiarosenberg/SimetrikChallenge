@@ -2,22 +2,6 @@ from django.db import models
 import pandas
 import sqlalchemy
 import pymysql
-import json
-
-def dictfetchall(engine):
-  desc = engine.description
-  return [
-    dict(zip([col[0] for col in desc], row))
-    for row in engine.fetchall()
-  ]
-  
-def convertToJson(res):
-  result = []
-  for row in res:
-    result.append(row)
-  jsonResponse = json.dumps(result, default=str)
-  return jsonResponse
-
 class TablesManager:
   def createTable(data):
     try:
@@ -39,21 +23,40 @@ class TablesManager:
   def getTables():
     try:
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
-      rs = engine.execute('SHOW tables')
+      connection = engine.raw_connection()
+      cursor = connection.cursor(pymysql.cursors.DictCursor)
+      cursor.execute('SHOW tables')
+      result = cursor.fetchall()
       engine.dispose()
-      rsToJson = convertToJson(rs)
-      return rsToJson
+      return result
     except:
       return 'error'
   
-  def getOneTable(name, prop, limit):
+  def getOneTable(name, prop, paginationParams):
     try:
+      limit = paginationParams.get('limit')
+      offset = paginationParams.get('offset')
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
-      q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {}'.format(name, prop, limit)
-      rs = engine.connect().execute(q)
+      connection = engine.raw_connection()
+      cursor = connection.cursor(pymysql.cursors.DictCursor)
+      q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, prop, limit, offset)
+      cursor.execute(q)
+      result = cursor.fetchall()
       engine.dispose()
-      rsToJson = convertToJson(rs)
-      return rsToJson
+      return result
     except:
       return 'error'
 
+  def getCount(name):
+    try:
+      engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+      connection = engine.raw_connection()
+      cursor = connection.cursor(pymysql.cursors.DictCursor)
+      qCount = 'SELECT COUNT(*) FROM {}'.format(name)
+      cursor.execute(qCount)
+      result = cursor.fetchall()
+      engine.dispose()
+      count = result[0].get('COUNT(*)')
+      return count
+    except:
+      return 'error'
