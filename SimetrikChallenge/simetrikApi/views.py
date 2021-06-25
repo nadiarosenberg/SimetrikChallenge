@@ -1,3 +1,4 @@
+from pandas.core import indexing
 from rest_framework.decorators import api_view
 from simetrikApi import models
 from django.http import JsonResponse
@@ -23,8 +24,16 @@ def get_tables(request):
 @api_view(["GET"])
 def get_table(request, name):
   prop = request.GET.get('prop')
-  limit = int(request.GET.get('pageSize'))
-  page = int(request.GET.get('page'))
+  limit = request.GET.get('pageSize')
+  if limit==None:
+    limit = 10
+  else:
+    int(limit)
+  page = request.GET.get('page')
+  if page == None:
+    page = 1
+  else:
+    int(page)
   where = request.GET.get('where')
   equals = request.GET.get('equals')
   offset = pagination.getOffSet(page, limit)

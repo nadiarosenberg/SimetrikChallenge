@@ -51,7 +51,7 @@ class TablesManager:
       return 'error'
   
   def getOneTable(name, prop, where, equals, paginationParams):
-    #try:
+    try:
       limit = paginationParams.get('limit')
       offset = paginationParams.get('offset')
       q = sqlSentence(name, where, equals, prop, limit, offset)
@@ -62,8 +62,8 @@ class TablesManager:
       result = cursor.fetchall()
       engine.dispose()
       return result
-    #except:
-      #return 'error'
+    except:
+      return 'error'
 
   def getCount(name, where, equals):
     try:
