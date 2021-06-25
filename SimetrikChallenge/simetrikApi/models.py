@@ -32,20 +32,20 @@ class TablesManager:
     except:
       return 'error'
   
-  def getOneTable(name, prop, paginationParams):
-    try:
+  def getOneTable(name, prop, where, equals, paginationParams):
+    #try:
       limit = paginationParams.get('limit')
       offset = paginationParams.get('offset')
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
-      q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, prop, limit, offset)
+      q = 'SELECT * FROM {} WHERE {} = "{}" ORDER BY {} DESC LIMIT {} OFFSET {} '.format(name, where, equals, prop, limit, offset)
       cursor.execute(q)
       result = cursor.fetchall()
       engine.dispose()
       return result
-    except:
-      return 'error'
+    #except:
+      #return 'error'
 
   def getCount(name):
     try:

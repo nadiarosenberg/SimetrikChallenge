@@ -25,9 +25,11 @@ def get_table(request, name):
   prop = request.GET.get('prop')
   limit = int(request.GET.get('pageSize'))
   page = int(request.GET.get('page'))
+  where = request.GET.get('where')
+  equals = request.GET.get('equals')
   offset = pagination.getOffSet(page, limit)
   paginationParams = {'page': page, 'limit': limit, 'offset': offset}
-  query = models.TablesManager.getOneTable(name, prop, paginationParams)
+  query = models.TablesManager.getOneTable(name, prop, where, equals, paginationParams)
   count = models.TablesManager.getCount(name)
   paginationResult = pagination.getPaginationResult(page, limit, name, count)
   if query == 'error':
