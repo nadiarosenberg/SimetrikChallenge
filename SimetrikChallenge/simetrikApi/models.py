@@ -33,7 +33,7 @@ class TablesManager:
       return 'error'
   
   def getOneTable(name, prop, where, equals, paginationParams):
-    #try:
+    try:
       limit = paginationParams.get('limit')
       offset = paginationParams.get('offset')
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
@@ -44,8 +44,8 @@ class TablesManager:
       result = cursor.fetchall()
       engine.dispose()
       return result
-    #except:
-      #return 'error'
+    except:
+      return 'error'
 
   def getCount(name):
     try:
