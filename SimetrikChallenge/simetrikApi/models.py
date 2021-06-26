@@ -2,6 +2,7 @@ from django.db import models
 import pandas
 import sqlalchemy
 import pymysql
+from simetrikApi import uploadCsv
 
 def isColumnValidation(name, param):
   q = 'SELECT * FROM {} LIMIT 1'.format(name)
@@ -42,10 +43,11 @@ def sqlCountSentence(name, where, equals):
     return qCount
 class TablesManager:
   def createTable(data):
+    urlFromClient = data.get('url')
+    url = uploadCsv.upload_file(urlFromClient)
+    name = data.get('name')
     try:
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
-      url = data.get('url')
-      name = data.get('name')
       csvReaded = pandas.read_csv(url)
       try:
         database = csvReaded.to_sql(name, engine, if_exists='fail')
