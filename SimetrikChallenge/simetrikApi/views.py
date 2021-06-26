@@ -5,6 +5,13 @@ from django.http import JsonResponse
 from rest_framework import status
 from simetrikApi import pagination 
 
+def paginationParamValuesValidation(param, defaultValue):
+  if param == None:
+    param = defaultValue
+  else:
+    int(param)
+  return param 
+
 @api_view(["GET"])
 def get_count(request, name):
   query = models.TablesManager.getCount(name)
@@ -23,17 +30,11 @@ def get_tables(request):
 
 @api_view(["GET"])
 def get_table(request, name):
-  prop = request.GET.get('prop')
   limit = request.GET.get('pageSize')
-  if limit==None:
-    limit = 10
-  else:
-    int(limit)
   page = request.GET.get('page')
-  if page == None:
-    page = 1
-  else:
-    int(page)
+  limit = paginationParamValuesValidation(limit, 10)
+  page = paginationParamValuesValidation(page, 1)
+  prop = request.GET.get('prop')
   where = request.GET.get('where')
   equals = request.GET.get('equals')
   offset = pagination.getOffSet(page, limit)

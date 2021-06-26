@@ -3,6 +3,20 @@ import pandas
 import sqlalchemy
 import pymysql
 
+def isColumnValidation(name, param):
+  q = 'SELECT * FROM {} LIMIT 1'.format(name)
+  engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+  connection = engine.raw_connection()
+  cursor = connection.cursor(pymysql.cursors.DictCursor)
+  cursor.execute(q)
+  field_names = [i[0] for i in cursor.description]
+  engine.dispose()
+  for i in field_names:
+    if param == i:
+      return param
+  param = None
+  return param
+
 def sqlSentence(name, where, equals, prop, limit, offset):
   q=''
   if (where == None and prop == None ):
@@ -60,6 +74,8 @@ class TablesManager:
     try:
       limit = paginationParams.get('limit')
       offset = paginationParams.get('offset')
+      prop = isColumnValidation(name, prop)
+      where = isColumnValidation(name, where)
       q = sqlSentence(name, where, equals, prop, limit, offset)
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
       connection = engine.raw_connection()
@@ -73,6 +89,7 @@ class TablesManager:
 
   def getCount(name, where, equals):
     try:
+      where = isColumnValidation(name, where)
       engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
