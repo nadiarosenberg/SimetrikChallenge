@@ -3,10 +3,16 @@ import pandas
 import sqlalchemy
 import pymysql
 from simetrikApi import uploadCsv
+import os
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+
+engineString = os.getenv('DB_URL')
 
 def isColumnValidation(name, param):
   q = 'SELECT * FROM {} LIMIT 1'.format(name)
-  engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+  engine = sqlalchemy.create_engine(engineString)
   connection = engine.raw_connection()
   cursor = connection.cursor(pymysql.cursors.DictCursor)
   cursor.execute(q)
@@ -47,7 +53,7 @@ class TablesManager:
     url = uploadCsv.upload_file(urlFromClient)
     name = data.get('name')
     try:
-      engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+      engine = sqlalchemy.create_engine(engineString)
       csvReaded = pandas.read_csv(url)
       try:
         database = csvReaded.to_sql(name, engine, if_exists='fail')
@@ -62,7 +68,7 @@ class TablesManager:
       
   def getTables():
     try:
-      engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+      engine = sqlalchemy.create_engine(engineString)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       cursor.execute('SHOW tables')
@@ -80,7 +86,7 @@ class TablesManager:
       prop = isColumnValidation(name, prop)
       where = isColumnValidation(name, where)
       q = sqlSentence(name, where, equals, prop, limit, offset)
-      engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+      engine = sqlalchemy.create_engine(engineString)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       cursor.execute(q)
@@ -94,7 +100,7 @@ class TablesManager:
   def getCount(name, where, equals):
     try:
       where = isColumnValidation(name, where)
-      engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/simetrikapidb')
+      engine = sqlalchemy.create_engine(engineString)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       qCount = sqlCountSentence(name, where, equals)
