@@ -1,17 +1,17 @@
 import json
 
-def convertToJson(res):
+def convert_to_json(res):
   result = []
   for row in res:
     result.append(row)
   jsonResponse = json.dumps(result, default=str)
   return jsonResponse
 
-def getOffSet(page, limit):
+def get_offset(page, limit):
   offset = (page * limit) - limit
   return offset
 
-def getNextPage(page, limit, name, count):
+def get_next_page(page, limit, name, count):
   rest = count - page * limit
   if (rest > 0):
     nextPage = '/'+name+'?page='+str(page + 1)+'&pageSize='+str(limit)
@@ -19,17 +19,17 @@ def getNextPage(page, limit, name, count):
   else:
     return None
 
-def getPreviousPage(page, limit, name):
+def get_previous_page(page, limit, name):
   if (page <= 1):
     return None
   else:
     return '/'+name+'?page='+str(page - 1)+'&pageSize='+str(limit)
 
-def getPaginationResult(page, limit, name, count):
-  paginationInfo = {
+def get_pagination_result(page, limit, name, count):
+  pagination_info = {
     'current': '/'+name+'?page='+str(page)+'&pageSize='+str(limit),
-    'prev': getPreviousPage(page, limit, name),
-    'next': getNextPage(page, limit, name, count)
+    'prev': get_previous_page(page, limit, name),
+    'next': get_next_page(page, limit, name, count)
   }
-  convertToJson(paginationInfo)
-  return paginationInfo
+  convert_to_json(pagination_info)
+  return pagination_info

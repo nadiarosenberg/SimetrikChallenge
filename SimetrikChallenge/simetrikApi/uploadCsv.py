@@ -39,3 +39,4 @@ def upload_file(file_path):
     s3_url = f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
     return s3_url
 
+

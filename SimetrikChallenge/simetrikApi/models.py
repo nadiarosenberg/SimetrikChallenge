@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
 
-engineString = os.getenv('DB_URL')
+ENGINE_STRING = os.getenv('DB_URL')
 
-def isColumnValidation(name, param):
+def is_column_validation(name, param):
   q = 'SELECT * FROM {} LIMIT 1'.format(name)
-  engine = sqlalchemy.create_engine(engineString)
+  engine = sqlalchemy.create_engine(ENGINE_STRING)
   connection = engine.raw_connection()
   cursor = connection.cursor(pymysql.cursors.DictCursor)
   cursor.execute(q)
@@ -24,7 +24,7 @@ def isColumnValidation(name, param):
   param = None
   return param
 
-def sqlSentence(name, where, equals, prop, limit, offset):
+def sql_sentence(name, where, equals, prop, limit, offset):
   q=''
   if (where == None and prop == None ):
     q = 'SELECT * FROM {} LIMIT {} OFFSET {}'.format(name, limit, offset)
@@ -39,24 +39,24 @@ def sqlSentence(name, where, equals, prop, limit, offset):
     q = 'SELECT * FROM {} WHERE {} = "{}" ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, where, equals, prop, limit, offset)
     return q
 
-def sqlCountSentence(name, where, equals):
-  qCount =''
+def sql_count_sentence(name, where, equals):
+  q_count =''
   if (where == None):
-    qCount = 'SELECT COUNT(*) FROM {}'.format(name)
-    return qCount
+    q_count = 'SELECT COUNT(*) FROM {}'.format(name)
+    return q_count
   else:
-    qCount = 'SELECT COUNT(*) FROM {} WHERE {} = "{}"'.format(name, where, equals)
-    return qCount
+    q_count = 'SELECT COUNT(*) FROM {} WHERE {} = "{}"'.format(name, where, equals)
+    return q_count
 class TablesManager:
-  def createTable(data):
-    urlFromClient = data.get('url')
-    url = uploadCsv.upload_file(urlFromClient)
+  def create_table(data):
+    client_url = data.get('url')
+    url = uploadCsv.upload_file(client_url)
     name = data.get('name')
     try:
-      engine = sqlalchemy.create_engine(engineString)
-      csvReaded = pandas.read_csv(url)
+      engine = sqlalchemy.create_engine(ENGINE_STRING)
+      csv_readed = pandas.read_csv(url)
       try:
-        database = csvReaded.to_sql(name, engine, if_exists='fail')
+        database = csv_readed.to_sql(name, engine, if_exists='fail')
         engine.dispose()
         return 'Table created'
       except:
@@ -66,9 +66,9 @@ class TablesManager:
       engine.dispose()
       return 'Error creating table'
       
-  def getTables():
+  def get_all_tables():
     try:
-      engine = sqlalchemy.create_engine(engineString)
+      engine = sqlalchemy.create_engine(ENGINE_STRING)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       cursor.execute('SHOW tables')
@@ -79,14 +79,14 @@ class TablesManager:
       engine.dispose()
       return 'error'
   
-  def getOneTable(name, prop, where, equals, paginationParams):
+  def get_one_table(name, prop, where, equals, paginationParams):
     try:
       limit = paginationParams.get('limit')
       offset = paginationParams.get('offset')
-      prop = isColumnValidation(name, prop)
-      where = isColumnValidation(name, where)
-      q = sqlSentence(name, where, equals, prop, limit, offset)
-      engine = sqlalchemy.create_engine(engineString)
+      prop = is_column_validation(name, prop)
+      where = is_column_validation(name, where)
+      q = sql_sentence(name, where, equals, prop, limit, offset)
+      engine = sqlalchemy.create_engine(ENGINE_STRING)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       cursor.execute(q)
@@ -97,14 +97,14 @@ class TablesManager:
       engine.dispose()
       return 'error'
 
-  def getCount(name, where, equals):
+  def get_count(name, where, equals):
     try:
-      where = isColumnValidation(name, where)
-      engine = sqlalchemy.create_engine(engineString)
+      where = is_column_validation(name, where)
+      engine = sqlalchemy.create_engine(ENGINE_STRING)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
-      qCount = sqlCountSentence(name, where, equals)
-      cursor.execute(qCount)
+      q_count = sql_count_sentence(name, where, equals)
+      cursor.execute(q_count)
       result = cursor.fetchall()
       engine.dispose()
       count = result[0].get('COUNT(*)')
