@@ -10,16 +10,6 @@ def pagination_params_validation(param, default_value):
   return int(param) 
 
 @api_view(["GET"])
-def get_count(request, name):
-  query = models.TablesManager.get_count(name)
-  if query == 'Ivalid url':
-    return JsonResponse(query, safe=False, status=status.HTTP_400_BAD_REQUEST)
-  elif query == 'error':
-    return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-  else:
-    return JsonResponse(query, safe=False, status=status.HTTP_200_OK)
-
-@api_view(["GET"])
 def get_tables(request):
   query = models.TablesManager.get_all_tables()
   if query == 'error':
@@ -37,8 +27,10 @@ def get_table(request, name):
   where = request.GET.get('where')
   equals = request.GET.get('equals')
   offset = pagination.get_offset(page, limit)
-  paginationParams = {'page': page, 'limit': limit, 'offset': offset}
-  query = models.TablesManager.get_one_table(name, prop, where, equals, paginationParams)
+  pagination_params = {'page': page, 'limit': limit, 'offset': offset}
+  query = models.TablesManager.get_one_table(name, prop, where, equals, pagination_params)
+  if query == 'Table does not exist':
+    return JsonResponse(query, safe=False, status=status.HTTP_404_NOT_FOUND)
   count = models.TablesManager.get_count(name, where, equals)
   if count == 'error' or query == 'error':
     return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -50,9 +42,11 @@ def get_table(request, name):
 def create_table(request):
   data = request.data
   query = models.TablesManager.create_table(data)
-  if query == 'Error creating table':
+  if query == 'Ivalid url':
+    return JsonResponse(query, safe=False, status=status.HTTP_400_BAD_REQUEST)
+  elif query == 'Error creating table':
     return JsonResponse(query, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
   elif query == 'Table already exist':
-    return JsonResponse(query, safe=False)
-  else:
     return JsonResponse(query, safe=False, status=status.HTTP_200_OK)
+  elif query == 'Table created':
+    return JsonResponse(query, safe=False, status=status.HTTP_201_CREATED)

@@ -20,18 +20,21 @@ def get_name(url):
   return name
 
 def is_column_validation(name, param):
-  q = 'SELECT * FROM {} LIMIT 1'.format(name)
-  engine = sqlalchemy.create_engine(ENGINE_STRING)
-  connection = engine.raw_connection()
-  cursor = connection.cursor(pymysql.cursors.DictCursor)
-  cursor.execute(q)
-  field_names = [i[0] for i in cursor.description]
-  engine.dispose()
-  for i in field_names:
-    if param == i:
-      return param
-  param = None
-  return param
+  try: 
+    q = 'SELECT * FROM {} LIMIT 1'.format(name)
+    engine = sqlalchemy.create_engine(ENGINE_STRING)
+    connection = engine.raw_connection()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(q)
+    field_names = [i[0] for i in cursor.description]
+    engine.dispose()
+    for i in field_names:
+      if param == i:
+        return param
+    param = None
+    return param
+  except:
+    return 'Table does not exist'
 
 def sql_sentence(name, where, equals, prop, limit, offset):
   q=''
@@ -93,11 +96,13 @@ class TablesManager:
       engine.dispose()
       return 'error'
   
-  def get_one_table(name, prop, where, equals, paginationParams):
+  def get_one_table(name, prop, where, equals, pagination_params):
     try:
-      limit = paginationParams.get('limit')
-      offset = paginationParams.get('offset')
+      limit = pagination_params.get('limit')
+      offset = pagination_params.get('offset')
       prop = is_column_validation(name, prop)
+      if prop == 'Table does not exist':
+        return prop
       where = is_column_validation(name, where)
       q = sql_sentence(name, where, equals, prop, limit, offset)
       engine = sqlalchemy.create_engine(ENGINE_STRING)
