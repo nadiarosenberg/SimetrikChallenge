@@ -5,10 +5,16 @@ import pymysql
 
 def sqlSentence(name, where, equals, prop, limit, offset):
   q=''
-  if (where == None):
-    q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, prop, limit, offset)
+  if (where == None and prop == None ):
+    q = 'SELECT * FROM {} LIMIT {} OFFSET {}'.format(name, limit, offset)
     return q
-  else:
+  elif (where == None and prop != None):
+     q = 'SELECT * FROM {} ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, prop, limit, offset)
+     return q
+  elif (where != None and prop == None):
+    q = 'SELECT * FROM {} WHERE {} = "{}" LIMIT {} OFFSET {}'.format(name, where, equals, limit, offset)
+    return q
+  elif (where != None and prop != None):
     q = 'SELECT * FROM {} WHERE {} = "{}" ORDER BY {} DESC LIMIT {} OFFSET {}'.format(name, where, equals, prop, limit, offset)
     return q
 
