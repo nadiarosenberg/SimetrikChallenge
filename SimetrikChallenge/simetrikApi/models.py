@@ -10,6 +10,11 @@ load_dotenv(verbose=True)
 
 ENGINE_STRING = os.getenv('DB_URL')
 
+def get_name(url):
+  file_dir, file_name = os.path.split(url)
+  name = file_name.strip('.csv')
+  return name
+
 def is_column_validation(name, param):
   q = 'SELECT * FROM {} LIMIT 1'.format(name)
   engine = sqlalchemy.create_engine(ENGINE_STRING)
@@ -50,21 +55,24 @@ def sql_count_sentence(name, where, equals):
 class TablesManager:
   def create_table(data):
     client_url = data.get('url')
-    url = uploadCsv.upload_file(client_url)
-    name = data.get('name')
+    name = get_name(client_url)
     try:
       engine = sqlalchemy.create_engine(ENGINE_STRING)
-      csv_readed = pandas.read_csv(url)
+      connection = engine.raw_connection()
+      cursor = connection.cursor(pymysql.cursors.DictCursor)
+      cursor.execute('SELECT * FROM {} LIMIT 1'.format(name))
+      engine.dispose()
+      return 'Table already exist'
+    except:
+      url = uploadCsv.upload_file(client_url)
       try:
+        csv_readed = pandas.read_csv(url)
         database = csv_readed.to_sql(name, engine, if_exists='fail')
         engine.dispose()
         return 'Table created'
       except:
         engine.dispose()
-        return 'Table already exist'
-    except:
-      engine.dispose()
-      return 'Error creating table'
+        return 'Error creating table'
       
   def get_all_tables():
     try:
