@@ -12,7 +12,9 @@ def pagination_params_validation(param, default_value):
 @api_view(["GET"])
 def get_count(request, name):
   query = models.TablesManager.get_count(name)
-  if query == 'error':
+  if query == 'Ivalid url':
+    return JsonResponse(query, safe=False, status=status.HTTP_400_BAD_REQUEST)
+  elif query == 'error':
     return JsonResponse('Something wrong happened', safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
   else:
     return JsonResponse(query, safe=False, status=status.HTTP_200_OK)

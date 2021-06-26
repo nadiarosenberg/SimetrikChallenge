@@ -12,7 +12,11 @@ ENGINE_STRING = os.getenv('DB_URL')
 
 def get_name(url):
   file_dir, file_name = os.path.split(url)
-  name = file_name.strip('.csv')
+  validate = file_name.find('.csv')
+  if(validate == -1):
+    return 0
+  else:
+    name = file_name.strip('.csv')
   return name
 
 def is_column_validation(name, param):
@@ -56,6 +60,8 @@ class TablesManager:
   def create_table(data):
     client_url = data.get('url')
     name = get_name(client_url)
+    if name == 0:
+      return 'Invalid url'
     try:
       engine = sqlalchemy.create_engine(ENGINE_STRING)
       connection = engine.raw_connection()
