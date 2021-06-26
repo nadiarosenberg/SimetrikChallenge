@@ -68,6 +68,7 @@ class TablesManager:
       engine.dispose()
       return result
     except:
+      engine.dispose()
       return 'error'
   
   def getOneTable(name, prop, where, equals, paginationParams):
@@ -85,6 +86,7 @@ class TablesManager:
       engine.dispose()
       return result
     except:
+      engine.dispose()
       return 'error'
 
   def getCount(name, where, equals):
@@ -100,4 +102,5 @@ class TablesManager:
       count = result[0].get('COUNT(*)')
       return count
     except:
+      engine.dispose()
       return 'error'
