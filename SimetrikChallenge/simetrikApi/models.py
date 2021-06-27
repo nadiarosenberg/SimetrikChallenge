@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv(verbose=True)
 
 ENGINE_STRING = os.getenv('DB_URL')
+DB_NAME = os.getenv('DB_NAME')
 
 def get_name(url):
   file_dir, file_name = os.path.split(url)
@@ -69,19 +70,19 @@ class TablesManager:
       engine = sqlalchemy.create_engine(ENGINE_STRING)
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
-      cursor.execute('SELECT * FROM {} LIMIT 1'.format(name))
-      engine.dispose()
-      return 'Table already exist'
-    except:
-      url = uploadCsv.upload_file(client_url)
-      try:
+      query = cursor.execute('SHOW tables LIKE "{}"'.format(name))
+      if query == 1:
+        engine.dispose()
+        return 'Table already exist'
+      else:
+        url = uploadCsv.upload_file(client_url)
         csv_readed = pandas.read_csv(url)
         database = csv_readed.to_sql(name, engine, if_exists='fail')
         engine.dispose()
         return 'Table created'
-      except:
-        engine.dispose()
-        return 'Error creating table'
+    except:
+      engine.dispose()
+      return 'Error creating table'
       
   def get_all_tables():
     try:
