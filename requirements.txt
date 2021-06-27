@@ -1,0 +1,9 @@
+django == 3.2.4 
+djangorestframework == 3.12.4
+mysqlclient == 2.0.3
+pandas == 1.2.5
+pymysql == 1.0.2
+sqlalchemy == 1.4.19
+boto3 == 1.17.101
+wget == 3.2
+python-dotenv == 0.18.0

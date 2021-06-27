@@ -1,6 +1,36 @@
+# Start
+Python version: Python 3.8.10
+
+1. Creates environment
+For windows:
+
+        > python -m venv env
+        > .\env\Scripts\activate
+
+2. Install dependencies
+
+        > pip install -r requirements.txt
+
+3. Creates .env file with your database and amazon credentials:
+
+        DB_NAME=your_dbname
+        DB_USER=your_user
+        DB_PASSWORD=your_password
+        DB_PORT=your_port
+        DB_HOST=your_host
+        DB_URL=mysql+pymysql://your_user:your_password@your_host:your_post/your_dbname
+        AWS_ACCESS_KEY_ID = your_id
+        AWS_SECRET_ACCESS_KEY = your_key
+        AWS_REGION = your_region
+        BUCKET_NAME = your_bucketname
+
+3. Run app
+
+        > cd ./SimetrikChallenge
+        > python manage.py runserver
 # __Endpoints__
 - [GET - tables](#get---tables)
-- [GET - tables/name](#get---tables/name)
+- [GET - tables/name](#get---tables/:name)
 - [POST - tables/create/](#post---tables/create)
 
 # GET - tables
@@ -42,19 +72,17 @@ For a database with 2 tables:
         500
         
     ### Content
-        {
-            "message": "Something wrong happened"
-        }
+            
+             "Something wrong happened"
 
-
-# GET - tables/name
+# GET - tables/:name
 Returns the table content corresponding to the name, paginated. Also allows filter (only one property at the time) and order by one column, DESC. If the table does not exist, returns error. 
 
 - ## Method
 GET
 
 - ## Url
-categories/name
+categories/:name
 
 - ## Url params
 
@@ -123,10 +151,9 @@ Required:
         500
     
     #### Content:
-        {
-            "message": "Something wrong happened"
-        }
-            
+        
+        "Something wrong happened"
+           
 - ### Case 2
         Table not found
     
@@ -134,9 +161,9 @@ Required:
         404
     
     #### Content
-        {
-            "message": "Table does not exist"
-        }
+        
+        "Table does not exist"
+        
 
 # POST - tables/create/
 Creates a table based on a .csv file.
@@ -157,10 +184,9 @@ Required:
     ### Code
         201 
     ### Content 
-        {
-            "message": "Table created"
-        }
-
+        
+        "Table created"
+        
 - ## Error responses
 
 - ### Case 1
@@ -170,9 +196,8 @@ Required:
         400
     
     #### Content
-        {
-            "message": ".csv file url is required"
-        }
+        
+        ".csv file url is required"
 
 - ### Case 2
         Invalid url
@@ -181,9 +206,8 @@ Required:
         400
     
     #### Content
-        {
-            "message": "Invalid url"
-        }
+        
+        "Invalid url"
         
 - ### Case 3
         Table already exist
@@ -192,9 +216,8 @@ Required:
         200
     
     #### Content
-        {
-            "message": "Table already exist"
-        }
+        
+        "Table already exist"
         
 - ### Case 4
         Internal server error
@@ -203,7 +226,6 @@ Required:
         500
     
     #### Content
-        {
-            "message": "Something wrong happened"
-        }
+        
+        "Something wrong happened"
 

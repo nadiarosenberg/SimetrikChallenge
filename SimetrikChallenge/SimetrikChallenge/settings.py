@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'simetrikApi',
-    'django_filters',
 ]
 
 MIDDLEWARE = [

@@ -71,12 +71,12 @@ class TablesManager:
       connection = engine.raw_connection()
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       query = cursor.execute('SHOW tables LIKE "{}"'.format(name))
-      if query == 1:
+      if query > 0:
         engine.dispose()
         return 'Table already exist'
       else:
         url = uploadCsv.upload_file(client_url)
-        csv_readed = pandas.read_csv(url)
+        csv_readed = pandas.read_csv(client_url)
         database = csv_readed.to_sql(name, engine, if_exists='fail')
         engine.dispose()
         return 'Table created'
