@@ -42,7 +42,7 @@ def get_table(request, name):
 def create_table(request):
   data = request.data
   query = models.TablesManager.create_table(data)
-  if query == 'Ivalid url':
+  if query == 'Invalid url':
     return Response(query, status=status.HTTP_400_BAD_REQUEST)
   elif query == 'Error creating table':
     return Response(query, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
