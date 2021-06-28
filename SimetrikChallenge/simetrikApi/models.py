@@ -2,7 +2,7 @@ from django.db import models
 import pandas
 import sqlalchemy
 import pymysql
-from simetrikApi import uploadCsv
+from simetrikApi import uploadCsvToS3
 import os
 from dotenv import load_dotenv
 
@@ -75,7 +75,7 @@ class TablesManager:
         engine.dispose()
         return 'Table already exist'
       else:
-        url = uploadCsv.upload_file(client_url)
+        url = uploadCsvToS3.upload_file(client_url)
         csv_readed = pandas.read_csv(client_url)
         database = csv_readed.to_sql(name, engine, if_exists='fail')
         engine.dispose()

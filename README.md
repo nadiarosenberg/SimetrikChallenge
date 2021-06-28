@@ -2,6 +2,7 @@
 Python version: Python 3.8.10
 
 1. Creates environment
+
 For windows:
 
         > python -m venv env
@@ -28,6 +29,14 @@ For windows:
 
         > cd ./SimetrikChallenge
         > python manage.py runserver
+    
+    **Do not run migrations**
+
+4. Run tests
+
+        > cd ./SimetrikChallenge
+        > python manage.py test 
+
 # __Endpoints__
 - [GET - tables](#get---tables)
 - [GET - tables/name](#get---tables/:name)
@@ -166,7 +175,7 @@ Required:
         
 
 # POST - tables/create/
-Creates a table based on a .csv file.
+Creates a table based on a .csv file url. 
 
 - ## Method
 POST

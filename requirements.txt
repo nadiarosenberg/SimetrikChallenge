@@ -7,3 +7,4 @@ sqlalchemy == 1.4.19
 boto3 == 1.17.101
 wget == 3.2
 python-dotenv == 0.18.0
+mock == 4.0.3
