@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from simetrikApi import models
 from rest_framework.response import Response
 from rest_framework import status
-from simetrikApi import pagination 
+from simetrikApi import pagination
 
 def pagination_params_validation(param, default_value):
   if param == None:

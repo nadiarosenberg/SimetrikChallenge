@@ -5,6 +5,7 @@ from simetrikApi import models
 from simetrikApi.models import TablesManager
 import simetrikApi.pagination 
 import mock
+
 class TablesManagerTest(APITestCase):
   @mock.patch("simetrikApi.models.TablesManager.create_table")
   def test_create_table_400_case1(self, mock_method):

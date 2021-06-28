@@ -76,7 +76,7 @@ class TablesManager:
         return 'Table already exist'
       else:
         url = uploadCsvToS3.upload_file(client_url)
-        csv_readed = pandas.read_csv(client_url)
+        csv_readed = pandas.read_csv(url)
         database = csv_readed.to_sql(name, engine, if_exists='fail')
         engine.dispose()
         return 'Table created'
@@ -131,4 +131,4 @@ class TablesManager:
       return count
     except:
       engine.dispose()
-      return 'error'
+      return 'error'z
