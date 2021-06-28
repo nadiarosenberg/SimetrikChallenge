@@ -130,5 +130,4 @@ class TablesManager:
       count = result[0].get('COUNT(*)')
       return count
     except:
-      engine.dispose()
-      return 'error'z
+      return 'error'
