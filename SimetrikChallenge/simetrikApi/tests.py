@@ -79,10 +79,11 @@ class TablesManagerTest(APITestCase):
     response = self.client.get(url)
     self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-  @mock.patch("simetrikApi.models.TablesManager.create_table")
+  '''@mock.patch("simetrikApi.models.TablesManager.create_table")
   def test_create_table_201(self, mock_method):
     url = reverse('tables-create')
     data = {'url': 'https://raw.githubusercontent.com/nadiarosenberg/csvForTesting/main/fig4.csv'}
     mock_method.return_value = 'Table created'
     response = self.client.post(url, data)
     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    self.assertContains(response.data, 'Table created')'''
