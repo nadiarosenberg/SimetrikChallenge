@@ -1,7 +1,7 @@
 # Start
 Python version: Python 3.8.10
 
-1. Creates environment
+1. Create environment
 
 For windows:
 
@@ -10,16 +10,17 @@ For windows:
 
 2. Install dependencies
 
+        > cd ./SimetrikChallenge
         > pip install -r requirements.txt
 
-3. Creates .env file with your database and amazon credentials:
+3. Create .env file with your database and amazon credentials:
 
         DB_NAME=your_dbname
         DB_USER=your_user
         DB_PASSWORD=your_password
         DB_PORT=your_port
         DB_HOST=your_host
-        DB_URL=mysql+pymysql://your_user:your_password@your_host:your_post/your_dbname
+        DB_URL=mysql+pymysql://your_user:your_password@your_host:your_port/your_dbname
         AWS_ACCESS_KEY_ID = your_id
         AWS_SECRET_ACCESS_KEY = your_key
         AWS_REGION = your_region
@@ -34,7 +35,6 @@ For windows:
 
 4. Run tests
 
-        > cd ./SimetrikChallenge
         > python manage.py test 
 
 # __Endpoints__
@@ -63,6 +63,7 @@ GET
 
 - ## Example
 For a database with 2 tables:
+
         [
             {
                 "Tables_in_database: "table1"
